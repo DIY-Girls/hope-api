@@ -1,10 +1,11 @@
 // const debug = require('debug')('app')
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const mongoose = require('mongoose');
 
 const app = express();
-
+app.use(cors());
 const apiRoutes = require('./api.routes');
 
 const port = process.env.PORT || 8080;
