@@ -11,13 +11,13 @@ router.get('/', function(req, res, next) {
 // User routes
 router.route('/users')
       .get(userController.index)
-      .post(userController.new);
+      .post(userController.create);
 
 router.route('/users/:user_id')
       .get(userController.view)
       .post(userController.update)
       .patch(userController.update)
       .put(userController.update)
-      .delete(userController.delete);
+      .delete(userController.deleteUser);
 
 module.exports = router;

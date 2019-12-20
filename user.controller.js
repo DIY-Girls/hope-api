@@ -1,7 +1,7 @@
 User = require('./users.model');
 
 // Handle index actions
-exports.index = function(req, res) {
+const index = function(req, res) {
     User.get(function(err, users) {
         if(err) {
             res.json({
@@ -18,7 +18,7 @@ exports.index = function(req, res) {
 };
 
 // Handle create user actions
-exports.new = function(req, res, next) {
+const create = function(req, res, next) {
     const user = new User();
     user.name = req.body.name ? req.body.name : user.name;
     user.gender = req.body.gender;
@@ -33,7 +33,7 @@ exports.new = function(req, res, next) {
 };
 
 // Handle view contact info
-exports.view = function(req, res, next) {
+const view = function(req, res, next) {
     Contact.findById(req.params.contact_id, function(err, contact) {
         if(err) {
             res.send(err);
@@ -46,7 +46,7 @@ exports.view = function(req, res, next) {
 };
 
 // Handle update contact info
-exports.update = function(req, res) {
+const update = function(req, res) {
     Contact.findById(req.params.contact_id, function(err, contact) {
         if(err) {
             res.send(err);
@@ -68,7 +68,7 @@ exports.update = function(req, res) {
 };
 
 // Handle delete contact
-exports.delete = function(req, res) {
+const deleteUser = function(req, res) {
     User.remove({
         _id: req.params.user_id,
     }, function(err, user) {
@@ -81,3 +81,11 @@ exports.delete = function(req, res) {
         });
     });
 };
+
+module.exports = {
+    create,
+    deleteUser,
+    index,
+    update,
+    view
+}
