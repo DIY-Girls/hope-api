@@ -12,10 +12,17 @@ const apiRoutes = require('./api.routes');
 
 const port = process.env.PORT || 8080;
 
-mongoose.connect(`mongodb+srv://paulluna0215:young2!5@cluster0-qxxtp.mongodb.net/test?retryWrites=true&w=majority`, {
+// PRODUCTION
+mongoose.connect(`mongodb+srv://paulluna0215:Kingdom0215@cluster0-qxxtp.mongodb.net/test?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
+
+// DEVELOPMENT
+// mongoose.connect(`mongodb://localhost/resthub`, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// });
 
 const db = mongoose.connection;
 
