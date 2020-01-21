@@ -13,16 +13,16 @@ const apiRoutes = require('./api.routes');
 const port = process.env.PORT || 8080;
 
 // PRODUCTION
-mongoose.connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0-qxxtp.mongodb.net/test?retryWrites=true&w=majority`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-
-// DEVELOPMENT
-// mongoose.connect(`mongodb://localhost/resthub`, {
+// mongoose.connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0-qxxtp.mongodb.net/test?retryWrites=true&w=majority`, {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true
 // });
+
+// DEVELOPMENT
+mongoose.connect(`mongodb://localhost/resthub`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
 const db = mongoose.connection;
 
