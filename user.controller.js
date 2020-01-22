@@ -18,12 +18,15 @@ exports.index = function(req, res) {
 };
 
 // Handle create user actions
-exports.create = function(req, res, next) {
+exports.create = function(req, res) {
+    // console.log(req.body);
     const user = new User();
     user.name = req.body.name ? req.body.name : user.name;
     user.gender = req.body.gender;
     user.email = req.body.email;
-    user.phone = req.body.phone
+    user.phone = req.body.phone;
+    user.password = req.body.password;
+    console.log(user);
     user.save(function(err) {
         res.json({
             message: 'new user created',

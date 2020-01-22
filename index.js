@@ -7,7 +7,11 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 const app = express();
+
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 const apiRoutes = require('./api.routes');
 
 const port = process.env.PORT || 8080;
@@ -19,7 +23,7 @@ const port = process.env.PORT || 8080;
 // });
 
 // DEVELOPMENT
-mongoose.connect(`mongodb://localhost/resthub`, {
+mongoose.connect(`mongodb://localhost/27018`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -28,13 +32,12 @@ const db = mongoose.connection;
 
 if(!db) {
     // debug('Error connecting db');
-    console.log('Error connecting db')
+    console.log('Error connecting db');
 } else {
     // debug('Db connected successfully');
-    console.log('Db connected successfully')
+    console.log('Db connected successfully');
 }
 
-app.use(bodyParser.urlencoded({extended: true}));
 app.use('/api', apiRoutes);
 
 app.listen(port, function() {
