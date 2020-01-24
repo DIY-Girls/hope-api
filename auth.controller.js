@@ -6,16 +6,24 @@ exports.login = function(req, res) {
     User.findOne({email: req.body.email}, function(err, user) {
         if(err || !user) {
             res.status(403);
-            res.json({
+            return res.json({
                 status: 'error',
                 message: 'Cannot access page!'
             });
-        } else {
-            res.json({
-                status: 'success',
-                message: 'Got to auth/login route :)',
+        }
+        if(req.body.password !== user.password){
+            // console.log('passwords did not match')
+            res.status(403);
+            return res.json({
+                status: 'error',
+                message: 'Passwords did not match ',
             });
         }
+
+        return res.json({
+            status: 'success',
+            message: 'Logged in'
+        })
     })
 };
 
