@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const userController = require('./user.controller');
+const authController = require('./auth.controller');
 
 router.get('/', function(req, res, next) {
     res.json({
@@ -19,5 +20,8 @@ router.route('/users/:user_id')
       .patch(userController.update)
       .put(userController.update)
       .delete(userController.deleteUser);
+
+router.route('/auth/login')
+      .post(authController.login);
 
 module.exports = router;

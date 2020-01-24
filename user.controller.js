@@ -19,7 +19,6 @@ exports.index = function(req, res) {
 
 // Handle create user actions
 exports.create = function(req, res) {
-    // console.log(req.body);
     const user = new User();
     user.name = req.body.name ? req.body.name : user.name;
     user.gender = req.body.gender;
@@ -50,13 +49,13 @@ exports.view = function(req, res, next) {
 
 // Handle update contact info
 exports.update = function(req, res) {
-    Contact.findById(req.params.contact_id, function(err, contact) {
+    User.findById(req.params.user_id, function(err, user) {
         if(err) {
             res.send(err);
         }
-        contact.name = req.body.name ? req.body.name : contact.name;
-        contact.gender = req.body.gender;
-        contact.phone = req.body.phone;
+        user.name = req.body.name ? req.body.name : contact.name;
+        user.gender = req.body.gender;
+        user.phone = req.body.phone;
 
         contact.save(function(err) {
             if(err) {
