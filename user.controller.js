@@ -35,7 +35,6 @@ exports.create = async function(req, res) {
         // const salt = await bcrypt.genSalt(10);
         // user.password = await bcrypt.hash(req.body.password, salt);
         user.password = req.body.password;
-        console.log(user);
         user.save(function(err) {
             res.json({
                 message: 'new user created',
@@ -47,13 +46,13 @@ exports.create = async function(req, res) {
 
 // Handle view contact info
 exports.view = function(req, res, next) {
-    Contact.findById(req.params.contact_id, function(err, contact) {
+    User.findById(req.params.user_id, function(err, user) {
         if(err) {
             res.send(err);
         }
         res.json({
             message: 'Contact details loading...',
-            data: contact
+            data: user
         });
     });
 };
