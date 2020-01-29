@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ContactSchema } = require('./contacts.model');
 
 // Setup schema
 const userSchema = mongoose.Schema({
@@ -16,6 +17,7 @@ const userSchema = mongoose.Schema({
     },
     gender: String,
     phone: String,
+    emergency_contacts: [ContactSchema],
     create_date: {
         type: Date,
         default: Date.now
