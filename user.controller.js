@@ -35,6 +35,7 @@ exports.create = async function(req, res) {
         // const salt = await bcrypt.genSalt(10);
         // user.password = await bcrypt.hash(req.body.password, salt);
         user.password = req.body.password;
+        user.emergencyContacts = [];
         user.save(function(err) {
             res.json({
                 message: 'new user created',
@@ -63,17 +64,21 @@ exports.update = function(req, res) {
         if(err) {
             res.send(err);
         }
-        user.name = req.body.name ? req.body.name : contact.name;
+
+        user.name = req.body.name ? req.body.name : user.name;
         user.gender = req.body.gender;
         user.phone = req.body.phone;
-
-        contact.save(function(err) {
+        user.password = user.password;
+        for(let i = 0; i < req.body.emergencyContacts.length; i++) {
+            user.emergency_contacts.push(req.body.emergencyContacts[i]);
+        }
+        user.save(function(err) {
             if(err) {
                 res.json(err);
             }
             res.json({
                 message: 'Contact info updated',
-                data: contact
+                data: user
             });
         });
     });
