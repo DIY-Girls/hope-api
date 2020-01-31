@@ -58,13 +58,19 @@ exports.view = function(req, res, next) {
     });
 };
 
-// Handle update contact info
 exports.update = function(req, res) {
-    User.findById(req.params.user_id, function(err, user) {
+    User.findById(req.params.user_id, async function(err, user) {
         if(err) {
             res.send(err);
         }
-
+        if(user.email !== req.body.email){
+            const valid = await validateEmail(req.body.email);
+            if(valid) {
+                user.email = req.body.email;
+            } else {
+                console.log('Email alreayd in use');
+            }
+        }
         user.name = req.body.name ? req.body.name : user.name;
         user.gender = req.body.gender;
         user.phone = req.body.phone;
@@ -98,3 +104,12 @@ exports.deleteUser = function(req, res) {
         });
     });
 };
+
+async function validateEmail(email) {
+    const user = await User.findOne({email});
+    if(user) {
+        return false;
+    }
+    console.log('response: ', response);
+    return true;
+}
