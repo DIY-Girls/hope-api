@@ -12,7 +12,6 @@ exports.login = function(req, res) {
             });
         }
         if(req.body.password !== user.password){
-            // console.log('passwords did not match')
             res.status(403);
             return res.json({
                 status: 'error',
