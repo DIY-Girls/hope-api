@@ -18,6 +18,7 @@ const userSchema = mongoose.Schema({
     gender: String,
     phone: String,
     emergency_contacts: [ContactSchema],
+    hope_device: String,
     create_date: {
         type: Date,
         default: Date.now
