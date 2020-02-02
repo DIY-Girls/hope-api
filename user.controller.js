@@ -37,6 +37,12 @@ exports.create = async function(req, res) {
         user.password = req.body.password;
         user.emergencyContacts = [];
         user.save(function(err) {
+            if(err) {
+                res.json({
+                    status: 'error',
+                    message: err,
+                });
+            }
             res.json({
                 message: 'new user created',
                 data: user
