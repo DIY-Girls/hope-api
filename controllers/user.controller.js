@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const User = require('./users.model');
+const User = require('../model/users.model');
 
 // Handle index actions
 exports.index = function(req, res) {

@@ -1,4 +1,4 @@
-User = require('./users.model');
+User = require('../model/users.model');
 
 exports.login = function(req, res) {
     console.log('authenticating...');
