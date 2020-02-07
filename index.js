@@ -5,7 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-
+const { handleError } = require('./helpers/error');
 const app = express();
 
 app.use(cors());
@@ -40,6 +40,9 @@ if(!db) {
 }
 
 app.use('/api', apiRoutes);
+app.use((err, req, res, next) => {
+    handleError(err, res)
+});
 
 app.listen(port, function() {
     console.log('Port runnig on', port);
