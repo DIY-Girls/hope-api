@@ -1,30 +1,29 @@
 const debug = require('debug')('auth')
 
+const { ErrorHandler } = require('../helpers/error');
+
 User = require('../model/users.model');
 
-exports.login = async function(req, res) {
+exports.login = async function(req, res, next) {
     debug('authenticating...');
     debug(req.body);
     try {
-        const user = await User.findOne({email: req.body.password});
+        const user = await User.findOne({email: req.body.email});
         if(!user) {
-            throw Error('Email is not on our system.');
+            throw new ErrorHandler(404, 'User with the specified email does not exists');
         }
+
         if(req.body.password !== user.password) {
             debug('Passwords did not match');
-            throw Error('Credentials did not match');
+            throw new ErrorHandler(401, 'Credentials did not match, try again');
         }
         debug('passwords matched');
-        return res.json({
-            status: 'success',
-            message: 'Logged in'
+        return res.status(200).json({
+            status: 'successful',
+            message: 'logged in'
         });
     } catch(error) {
-        debug('An error occurred:', error);
-        return res.json({
-            status: 'error',
-            message: error
-        })
+        next(error);
     }
 };
 
