@@ -5,7 +5,6 @@ const { ErrorHandler } = require('../helpers/error');
 User = require('../model/users.model');
 
 exports.login = async function(req, res, next) {
-    debug('authenticating...');
     debug(req.body);
     try {
         const user = await User.findOne({email: req.body.email});
@@ -20,7 +19,8 @@ exports.login = async function(req, res, next) {
         debug('passwords matched');
         return res.status(200).json({
             status: 'successful',
-            message: 'logged in'
+            message: 'logged in',
+            userId: user._id
         });
     } catch(error) {
         next(error);
@@ -28,5 +28,4 @@ exports.login = async function(req, res, next) {
 };
 
 exports.logout = function(req, res) {
-
 }
