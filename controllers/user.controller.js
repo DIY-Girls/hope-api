@@ -81,9 +81,7 @@ exports.update = function(req, res) {
         user.gender = req.body.gender;
         user.phone = req.body.phone;
         user.password = user.password;
-        for(let i = 0; i < req.body.emergencyContacts.length; i++) {
-            user.emergency_contacts.push(req.body.emergencyContacts[i]);
-        }
+
         user.save(function(err) {
             if(err) {
                 res.json(err);
