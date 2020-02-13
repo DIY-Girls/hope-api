@@ -13,6 +13,12 @@ router.get('/', function(req, res, next) {
 router.route('/users')
       .get(userController.index)
       .post(userController.create);
+      
+router.route('/users/add_contact')
+      .post(userController.addContact);
+      
+router.route('/users/delete_contact')
+      .post(userController.deleteContact);
 
 router.route('/users/:user_id')
       .get(userController.view)
@@ -20,6 +26,7 @@ router.route('/users/:user_id')
       .patch(userController.update)
       .put(userController.update)
       .delete(userController.deleteUser);
+
 
 router.route('/auth/login')
       .post(authController.login);

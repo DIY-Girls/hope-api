@@ -111,6 +111,48 @@ exports.deleteUser = function(req, res) {
     });
 };
 
+exports.addContact = async function(req, res) {
+    console.log(req.body);
+    const user_id = req.body.user_id;
+    const newContact = {
+        name: req.body.name,
+        email: req.body.email,
+        phone: req.body.phone
+    };
+    const user = await User.findById(user_id);
+    user.emergency_contacts.push(newContact);
+    user.save(function (err) {
+        if(err) {
+            res.send(err);
+        }
+        res.json({
+            status: 'success',
+            message: 'Contact added!'
+        })
+    })
+};
+
+exports.deleteContact = async function(req, res) {
+    console.log(req.body);
+    const user_id = req.body.user_id;
+    const email = req.body.email;
+    const user = await User.findById(user_id);
+    // if(user.emergency_contacts.length)
+    const contacts = user.emergency_contacts.filter(element => element.email !== email);
+    console.log(contacts);
+    user.emergency_contacts = contacts;
+    user.save(function (err) {
+        if(err) {
+            res.send(err);
+        }
+        res.json({
+            status: 'success',
+            message: 'Contact deleted'
+        });
+    });
+
+};
+
 async function validateEmail(email) {
     const user = await User.findOne({email});
     if(user) {
