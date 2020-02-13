@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const User = require('../model/users.model');
 
+const { ErrorHandler } = require('../helpers/error');
+
 // Handle index actions
 exports.index = function(req, res) {
     User.get(function(err, users) {
@@ -111,6 +113,7 @@ exports.deleteUser = function(req, res) {
 
 exports.addContact = async function(req, res) {
     console.log(req.body);
+    let exists = false;
     const user_id = req.body.user_id;
     const newContact = {
         name: req.body.name,
@@ -118,16 +121,26 @@ exports.addContact = async function(req, res) {
         phone: req.body.phone
     };
     const user = await User.findById(user_id);
-    user.emergency_contacts.push(newContact);
-    user.save(function (err) {
-        if(err) {
-            res.send(err);
+    let contacts = user.emergency_contacts;
+    contacts.forEach(element => {
+        if(element.email === newContact.email) {
+            exists = true;
         }
-        res.json({
-            status: 'success',
-            message: 'Contact added!'
-        })
-    })
+    });
+    if (exists) {
+        throw new ErrorHandler(404, 'Contact with that email already exists');
+    } else {
+        user.emergency_contacts.push(newContact);
+        user.save(function (err) {
+            if(err) {
+                res.send(err);
+            }
+            res.json({
+                status: 'success',
+                message: 'Contact added!'
+            })
+        });
+    }
 };
 
 exports.deleteContact = async function(req, res) {
