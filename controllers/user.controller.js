@@ -7,10 +7,7 @@ const { ErrorHandler } = require('../helpers/error');
 exports.index = function(req, res) {
     User.get(function(err, users) {
         if(err) {
-            res.json({
-                status: 'error',
-                message: err,
-            });
+            throw new ErrorHandler(400, 'Could not find users');
         }
         res.json({
             status:'success',
@@ -25,25 +22,22 @@ exports.create = async function(req, res) {
     let user = await User.findOne({ email: req.body.email });
 
     if(user) {
-        return res.status(400).send('User already exists');
+        throw new ErrorHandler(400, 'User already exists');
     } else {
         user = new User();
         user.name = req.body.name ? req.body.name : user.name;
         user.gender = req.body.gender;
         user.email = req.body.email;
         user.phone = req.body.phone;
-        
-        // Hashing password
-        // const salt = await bcrypt.genSalt(10);
-        // user.password = await bcrypt.hash(req.body.password, salt);
         user.password = req.body.password;
         user.emergencyContacts = [];
+
         user.save(function(err) {
             if(err) {
                 res.json({
                     status: 'error',
                     message: err,
-                });
+                })
             }
             res.json({
                 message: 'new user created',
@@ -148,9 +142,7 @@ exports.deleteContact = async function(req, res) {
     const user_id = req.body.user_id;
     const email = req.body.email;
     const user = await User.findById(user_id);
-    // if(user.emergency_contacts.length)
     const contacts = user.emergency_contacts.filter(element => element.email !== email);
-    console.log(contacts);
     user.emergency_contacts = contacts;
     user.save(function (err) {
         if(err) {
@@ -169,6 +161,5 @@ async function validateEmail(email) {
     if(user) {
         return false;
     }
-    console.log('response: ', response);
     return true;
 }
