@@ -130,6 +130,7 @@ exports.addContact = async function(req, res) {
                 res.send(err);
             }
             res.json({
+                emergencyContacts: user.emergency_contacts, 
                 status: 'success',
                 message: 'Contact added!'
             })
@@ -149,6 +150,7 @@ exports.deleteContact = async function(req, res) {
             res.send(err);
         }
         res.json({
+            emergencyContacts: user.emergency_contacts,
             status: 'success',
             message: 'Contact deleted'
         });
