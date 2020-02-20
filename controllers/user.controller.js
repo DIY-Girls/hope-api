@@ -18,32 +18,36 @@ exports.index = function(req, res) {
 };
 
 // Handle create user actions
-exports.create = async function(req, res) {
-    let user = await User.findOne({ email: req.body.email });
-
-    if(user) {
-        throw new ErrorHandler(400, 'User already exists');
-    } else {
-        user = new User();
-        user.name = req.body.name ? req.body.name : user.name;
-        user.gender = req.body.gender;
-        user.email = req.body.email;
-        user.phone = req.body.phone;
-        user.password = req.body.password;
-        user.emergencyContacts = [];
-
-        user.save(function(err) {
-            if(err) {
+exports.create = async function(req, res, next) {
+    try {
+        let user = await User.findOne({ email: req.body.email });
+    
+        if(user) {
+            throw new ErrorHandler(400, 'User already exists');
+        } else {
+            user = new User();
+            user.name = req.body.name ? req.body.name : user.name;
+            user.gender = req.body.gender;
+            user.email = req.body.email;
+            user.phone = req.body.phone;
+            user.password = req.body.password;
+            user.emergencyContacts = [];
+    
+            user.save(function(err) {
+                if(err) {
+                    res.json({
+                        status: 'error',
+                        message: err,
+                    })
+                }
                 res.json({
-                    status: 'error',
-                    message: err,
-                })
-            }
-            res.json({
-                message: 'new user created',
-                data: user
+                    message: 'new user created',
+                    data: user
+                });
             });
-        });
+        }
+    } catch (error) {
+        next(error);
     }
 };
 
@@ -70,7 +74,7 @@ exports.update = function(req, res) {
             if(valid) {
                 user.email = req.body.email;
             } else {
-                console.log('Email alreayd in use');
+                console.log('Email already in use');
             }
         }
         user.name = req.body.name ? req.body.name : user.name;
@@ -105,56 +109,62 @@ exports.deleteUser = function(req, res) {
     });
 };
 
-exports.addContact = async function(req, res) {
-    console.log(req.body);
-    let exists = false;
-    const user_id = req.body.user_id;
-    const newContact = {
-        name: req.body.name,
-        email: req.body.email,
-        phone: req.body.phone
-    };
-    const user = await User.findById(user_id);
-    let contacts = user.emergency_contacts;
-    contacts.forEach(element => {
-        if(element.email === newContact.email) {
-            exists = true;
-        }
-    });
-    if (exists) {
-        throw new ErrorHandler(404, 'Contact with that email already exists');
-    } else {
-        user.emergency_contacts.push(newContact);
-        user.save(function (err) {
-            if(err) {
-                res.send(err);
+exports.addContact = async function(req, res, next) {
+    try {
+        let exists = false;
+        const user_id = req.body.user_id;
+        const newContact = {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone
+        };
+        const user = await User.findById(user_id);
+        let contacts = user.emergency_contacts;
+        contacts.forEach(element => {
+            if(element.email === newContact.email) {
+                exists = true;
             }
-            res.json({
-                emergencyContacts: user.emergency_contacts, 
-                status: 'success',
-                message: 'Contact added!'
-            })
         });
+        if (exists) {
+            throw new ErrorHandler(404, 'Contact with that email already exists');
+        } else {
+            user.emergency_contacts.push(newContact);
+            user.save(function (err) {
+                if(err) {
+                    res.send(err);
+                }
+                res.json({
+                    emergencyContacts: user.emergency_contacts, 
+                    status: 'success',
+                    message: 'Contact added!'
+                })
+            });
+        }
+    } catch (error) {
+        next(error);
     }
 };
 
-exports.deleteContact = async function(req, res) {
-    console.log(req.body);
-    const user_id = req.body.user_id;
-    const email = req.body.email;
-    const user = await User.findById(user_id);
-    const contacts = user.emergency_contacts.filter(element => element.email !== email);
-    user.emergency_contacts = contacts;
-    user.save(function (err) {
-        if(err) {
-            res.send(err);
-        }
-        res.json({
-            emergencyContacts: user.emergency_contacts,
-            status: 'success',
-            message: 'Contact deleted'
+exports.deleteContact = async function(req, res, next) {
+    try {
+        const user_id = req.body.user_id;
+        const email = req.body.email;
+        const user = await User.findById(user_id);
+        const contacts = user.emergency_contacts.filter(element => element.email !== email);
+        user.emergency_contacts = contacts;
+        user.save(function (err) {
+            if(err) {
+                throw new ErrorHandler(500, 'Oops, there was an issue deleting contact. Try again.');
+            }
+            res.json({
+                emergencyContacts: user.emergency_contacts,
+                status: 'success',
+                message: 'Contact deleted'
+            });
         });
-    });
+    } catch (error) {
+        next(error);
+    }
 
 };
 
