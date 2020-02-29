@@ -18,7 +18,6 @@ const port = process.env.PORT || 8080;
 
 if(process.env.ENVIRONMENT === 'production') {
     // PRODUCTION DATABASE
-    console.log('hereaaaasadsadsads');
     mongoose.connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0-qxxtp.mongodb.net/test?retryWrites=true&w=majority`, {
         useNewUrlParser: true,
         useUnifiedTopology: true
