@@ -64,17 +64,17 @@ exports.view = function(req, res, next) {
     });
 };
 
-exports.update = function(req, res) {
-    User.findById(req.params.user_id, async function(err, user) {
-        if(err) {
-            res.send(err);
-        }
-        if(user.email !== req.body.email){
-            const valid = await validateEmail(req.body.email);
+exports.update = async function(req, res) {
+    
+    try {
+        let user = await User.findById(req.params.user_id);
+        const { email } = req.body.email;
+        if(user.email !== email) {
+            const valid = await validateEmail(email);
             if(valid) {
-                user.email = req.body.email;
+                user.emai = email;
             } else {
-                console.log('Email already in use');
+                throw new ErrorHandler(400, 'User already exists');
             }
         }
         user.name = req.body.name ? req.body.name : user.name;
@@ -84,14 +84,16 @@ exports.update = function(req, res) {
 
         user.save(function(err) {
             if(err) {
-                res.json(err);
+                return res.json(err);
             }
-            res.json({
+            return res.json({
                 message: 'Contact info updated',
                 data: user
             });
         });
-    });
+    } catch (error) {
+        next(error);
+    }
 };
 
 // Handle delete contact
