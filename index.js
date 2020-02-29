@@ -1,4 +1,3 @@
-// const debug = require('debug')('app')
 require('dotenv').config();
 
 const express = require('express');
@@ -34,10 +33,8 @@ if(process.env.ENVIRONMENT === 'production') {
 const db = mongoose.connection;
 
 if(!db) {
-    // debug('Error connecting db');
     console.log('Error connecting db');
 } else {
-    // debug('Db connected successfully');
     console.log('Db connected successfully');
 }
 
