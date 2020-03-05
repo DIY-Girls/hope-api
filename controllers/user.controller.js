@@ -34,8 +34,8 @@ exports.create = async function(req, res, next) {
             user.emergencyContacts = [];
 
             const err = await user.save();
-            
-            if(err) {
+            console.log(err);
+            if(!err) {
                 throw new ErrorHandler(500, 'Something went wrong');
             }
             res.json({
