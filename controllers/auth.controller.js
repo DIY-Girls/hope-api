@@ -1,4 +1,5 @@
 // const debug = require('debug')('auth')
+const bcrypt = require('bcrypt');
 
 const { ErrorHandler } = require('../helpers/error');
 
@@ -9,15 +10,15 @@ exports.login = async function(req, res, next) {
     try {
         const user = await User.findOne({email: req.body.email});
         if(!user) {
-            throw new ErrorHandler(404, 'User with the specified email does not exists');
+            throw new ErrorHandler(401, 'Email/password is incorrect.');
         }
-
-        if(req.body.password !== user.password) {
-            // debug('Passwords did not match');
-            throw new ErrorHandler(401, 'Credentials did not match, try again');
+        const { password } = req.body;
+        const match = await bcrypt.compare(password, user.password);
+        if(!match) {
+            throw new ErrorHandler(401, 'Email/password is incorrect');
         }
-        // debug('passwords matched');
-        return res.status(200).json({
+        
+        res.status(200).json({
             status: 'successful',
             message: 'logged in',
             userId: user._id
