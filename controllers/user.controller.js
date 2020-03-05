@@ -32,19 +32,17 @@ exports.create = async function(req, res, next) {
             user.phone = req.body.phone;
             user.password = req.body.password;
             user.emergencyContacts = [];
-    
-            user.save(function(err) {
-                if(err) {
-                    res.json({
-                        status: 'error',
-                        message: err,
-                    })
-                }
-                res.json({
-                    message: 'new user created',
-                    data: user
-                });
+
+            const err = await user.save();
+            
+            if(err) {
+                throw new ErrorHandler(500, 'Something went wrong');
+            }
+            res.json({
+                message: 'new user created',
+                data: user
             });
+                
         }
     } catch (error) {
         next(error);
